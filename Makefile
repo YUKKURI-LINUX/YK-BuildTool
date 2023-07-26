@@ -1,8 +1,7 @@
 NAME = ${DISTRO_NAME}
 VER = ${VERSION}
 
-.PHONY: config
-config: 
+setup: config 
 	lb config \
 	--apt apt \
 	--apt-pipeline 1 \
@@ -16,7 +15,14 @@ config:
 	--initsystem systemd \
 	--iso-volume ${NAME}_INSTALL \
 
-build: config
+import-config: archived_config.zip config
+	cp -o archived_config.zip
+delete-config: archived_config.zip
+	rm -f archived_config.zip
+export-config: setup
+	7z a archived_config.zip config
+
+build: setup
 	sudo lb build
 
 clean:
